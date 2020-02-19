@@ -1,0 +1,21 @@
+$gutter_s: 5px;
+$gutter_m: 10px;
+$gutter_l: 15px;
+
+$user_border: 2px solid rgba(232, 232, 232, 1);
+$text_1: rgba(82, 82, 82, 1);
+$text_2: rgba(65, 75, 82, 1);
+$text_3: rgba(189, 192, 195, 1);
+
+$break: (
+	"m": 768px,
+	"l": 1200px
+);
+
+@mixin media($screen_width) {
+	$value: map-get($break, $screen_width);
+
+	@media only screen and (min-width: $value) {
+		@content;
+	}
+}
