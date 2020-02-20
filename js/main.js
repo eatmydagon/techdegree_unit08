@@ -1,3 +1,7 @@
+/* ================= Variables and constructors ===============
+============================================================= */
+
+// variables
 const directory = document.querySelector(".directory");
 const randomAPI = "https://randomuser.me/api/?results=12&nat=us,gb";
 const popup = document.querySelector(".popup");
@@ -5,6 +9,7 @@ const chevron = document.querySelectorAll(".chevron");
 let current_user_profile;
 let employees;
 
+// contructor -- constructs an employee object
 class Employee_profile {
 	constructor(employee) {
 		this.name = `${employee.name.first} ${employee.name.last}`;
@@ -27,62 +32,56 @@ class Employee_profile {
 	}
 }
 
-const generateHTML = (employee_data) => {
-	let employee = employee_data;
-	let userDiv = document.createElement("div");
-	userDiv.setAttribute("class", "user");
-	userDiv.setAttribute("user-id", `${employee.id}`);
-	userDiv.innerHTML = `
+/* ===================== Functions ===========================
+============================================================= */
+
+// function to fetch data from the randomuser api
+const fetch_data = async (url) => {
+	try {
+		employees = await fetch(url)
+			.then((response) => response.json())
+			.then((data) => data.results)
+			.then((data) => {
+				data.forEach((user, index) => (user.id = index));
+				return data;
+			})
+			.then((data) => {
+				profiles = data.map(
+					(employee) => new Employee_profile(employee)
+				);
+				return profiles;
+			});
+		generateHTML(employees);
+	} catch (error) {
+		console.error(
+			`Sorry we could not process your request due to: ${error}`
+		);
+	}
+};
+
+//function to create html markup from an array parameter
+const generateHTML = (employee_array) => {
+	employee_array.forEach((employee) => {
+		let profile = employee;
+		let userDiv = document.createElement("div");
+		userDiv.setAttribute("class", "user");
+		userDiv.setAttribute("user-id", `${profile.id}`);
+		userDiv.innerHTML = `
 					<figure>
 						<img
-							src="${employee.image}"
+							src="${profile.image}"
 						/>
 					</figure>
 					<div>
-						<p>${employee.name}</p>
-						<p>${employee.email}</p>
-						<p>${employee.country}</p>
+						<p>${profile.name}</p>
+						<p>${profile.email}</p>
+						<p>${profile.country}</p>
 					</div> `;
-	directory.appendChild(userDiv);
+		return directory.appendChild(userDiv);
+	});
 };
 
-const fetch_data = async (url) => {
-	employees = await fetch(url)
-		.then((response) => response.json())
-		.then((data) => data.results)
-		.then((data) => {
-			data.forEach((user, index) => (user.id = index));
-			return data;
-		})
-		.then((data) => {
-			profiles = data.map((employee) => new Employee_profile(employee));
-			return profiles;
-		});
-
-	employees.forEach((employee) => generateHTML(employee));
-};
-
-fetch_data(randomAPI);
-
-directory.addEventListener("click", (event) => {
-	e = event.target;
-	let user = e;
-	let user_id;
-	if (e.getAttribute("class") !== "directory") {
-		while (user.getAttribute("class") !== "user") {
-			user = user.parentElement;
-		}
-		user_id = parseInt(user.getAttribute("user-id"));
-		current_user_profile = employees
-			.filter((employee) => employee.id === user_id)
-			.reduce((profile, data) => (profile = data), {});
-		generatePopup(current_user_profile);
-		popup.style.display = "initial";
-	} else {
-		console.log("directory has been clicked");
-	}
-});
-
+//function to create popup markup from an object argument
 const generatePopup = (profile_data) => {
 	let profile = profile_data;
 	let profileDiv = document.createElement("div");
@@ -111,29 +110,7 @@ const generatePopup = (profile_data) => {
 	popup.appendChild(profileDiv);
 };
 
-popup.addEventListener("click", (event) => {
-	let e = event.target;
-	if (
-		e.getAttribute("class") === "popup" ||
-		e.getAttribute("class") === "close"
-	) {
-		popup.style.display = "none";
-		popup_remove();
-	}
-});
-
-const popup_remove = () => {
-	let popup_profile = document.querySelector(".container");
-	popup_profile.remove();
-};
-
-chevron[0].addEventListener("click", (event) => {
-	popup_navigate(-1);
-});
-chevron[01].addEventListener("click", (event) => {
-	popup_navigate(1);
-});
-
+//function to navigate between popup profiles
 const popup_navigate = (navigate) => {
 	let id = current_user_profile.id;
 	let new_user_id = id + navigate;
@@ -145,3 +122,52 @@ const popup_navigate = (navigate) => {
 		generatePopup(current_user_profile);
 	}
 };
+
+// function to remove the current displayed popup
+const popup_remove = () => {
+	let popup_profile = document.querySelector(".container");
+	popup_profile.remove();
+};
+
+/* ================= Event Listeners ===============
+============================================================= */
+
+// pop up display - fires when an employee profile is clicked
+directory.addEventListener("click", (event) => {
+	e = event.target;
+	let user = e;
+	let user_id;
+	if (e.getAttribute("class") !== "directory") {
+		while (user.getAttribute("class") !== "user") {
+			user = user.parentElement;
+		}
+		user_id = parseInt(user.getAttribute("user-id"));
+		current_user_profile = employees
+			.filter((employee) => employee.id === user_id)
+			.reduce((profile, data) => (profile = data), {});
+		generatePopup(current_user_profile);
+		popup.style.display = "initial";
+	}
+});
+
+// pop up close - fires when the user clicks any place apart from the popup profile or clicks on the x button
+popup.addEventListener("click", (event) => {
+	let e = event.target;
+	if (
+		e.getAttribute("class") === "popup" ||
+		e.getAttribute("class") === "close"
+	) {
+		popup.style.display = "none";
+		popup_remove();
+	}
+});
+
+// pop up navigate - fires when the left or right chevrons on a pop up are clicked
+chevron[0].addEventListener("click", (event) => {
+	popup_navigate(-1);
+});
+chevron[01].addEventListener("click", (event) => {
+	popup_navigate(1);
+});
+
+window.onload = fetch_data(randomAPI);

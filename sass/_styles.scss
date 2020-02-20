@@ -1,0 +1,45 @@
+header {
+	& h1 {
+		color: $text_1;
+		font-size: 1.2rem;
+	}
+}
+
+.user {
+	transition: all 0.3s ease-in-out;
+	&:hover {
+		border-color: $text_1;
+	}
+	& div {
+		& p:nth-of-type(1) {
+			color: $text_2;
+			font-weight: bold;
+			font-size: 1.1rem;
+		}
+		& p:nth-of-type(n + 2) {
+			color: $text_3;
+			font-size: 0.9rem;
+		}
+	}
+}
+
+.container {
+	background-color: white;
+}
+
+.container > div {
+	& div:nth-of-type(1) {
+		& p:nth-of-type(1) {
+			font-weight: bold;
+		}
+	}
+}
+
+.chevron {
+	background-color: transparent;
+}
+
+.close {
+	background-color: transparent;
+	opacity: 0.7;
+}

@@ -351,18 +351,35 @@ header {
   width: 90%;
   margin: 0 auto;
   padding: 10px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+@media only screen and (min-width: 768px) {
+  header {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }
 header h1 {
   padding: 10px;
   margin: 0;
-  color: #525252;
-  font-size: 1.2rem;
   text-align: center;
 }
 @media only screen and (min-width: 768px) {
   header h1 {
     text-align: left;
   }
+}
+
+input {
+  border: 2px solid #e8e8e8;
+  border-radius: 10px;
+  outline: none;
+  padding: 5px;
+  width: 100%;
+  max-width: 300px;
 }
 
 main {
@@ -436,15 +453,6 @@ main {
     text-align: left;
   }
 }
-.user div p:nth-of-type(1) {
-  color: #414b52;
-  font-weight: bold;
-  font-size: 1.1rem;
-}
-.user div p:nth-of-type(n + 2) {
-  color: #bdc0c3;
-  font-size: 0.9rem;
-}
 
 .popup {
   height: 100vh;
@@ -487,9 +495,6 @@ main {
   width: 90%;
   margin: 10px 0 0;
 }
-.container > div div:nth-of-type(1) p:nth-of-type(1) {
-  font-weight: bold;
-}
 .container > div div:nth-of-type(2) {
   width: 90%;
   margin: 10px 0 15px;
@@ -497,7 +502,6 @@ main {
 }
 
 .chevron {
-  background-color: transparent;
   border: none;
   position: absolute;
 }
@@ -529,15 +533,51 @@ main {
 }
 
 .close {
-  background-color: transparent;
   border: none;
   position: absolute;
   height: 15px;
   width: 15px;
   top: 10px;
   right: 10px;
-  opacity: 0.7;
   background: url(../resources/close/close-solid.svg) no-repeat center/cover;
+}
+
+header h1 {
+  color: #525252;
+  font-size: 1.2rem;
+}
+
+.user {
+  transition: all 0.3s ease-in-out;
+}
+.user:hover {
+  border-color: #525252;
+}
+.user div p:nth-of-type(1) {
+  color: #414b52;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+.user div p:nth-of-type(n + 2) {
+  color: #bdc0c3;
+  font-size: 0.9rem;
+}
+
+.container {
+  background-color: white;
+}
+
+.container > div div:nth-of-type(1) p:nth-of-type(1) {
+  font-weight: bold;
+}
+
+.chevron {
+  background-color: transparent;
+}
+
+.close {
+  background-color: transparent;
+  opacity: 0.7;
 }
 
 /*# sourceMappingURL=main.css.map */
