@@ -1,47 +1,55 @@
 const search = document.querySelector("[type=text]");
-
 let searchValue;
+let search_results;
 
-let search_data;
+/* ===================== Functions ===========================
+============================================================= */
 
-search.addEventListener("keyup", (event) => {
-	searchValue = search.value;
-	searchArray();
-	filter_html();
-});
-
+// function to filter the employees array based on the search value
 const searchArray = () => {
-	return (search_data = employees.filter((employee) => {
+	return (search_results = employees.filter((employee) => {
 		return searchObject(employee);
 	}));
 };
 
+// function to filter each employee object based on the search value
 let searchObject = (object) => {
-	let xyz;
-	let searchResult;
+	let search_index;
+	let search_outcome;
 	for (data in object) {
-		xyz = object[data];
-		if (typeof xyz === "number") {
-			xyz = xyz.toString();
-			if (xyz.indexOf(searchValue) !== -1) {
-				searchResult = true;
+		search_index = object[data];
+		if (typeof search_index === "number") {
+			search_index = search_index.toString();
+			if (search_index.indexOf(searchValue) !== -1) {
+				search_outcome = true;
 			}
-		} else if (typeof xyz === "string") {
-			xyz = xyz.toLowerCase();
-			if (xyz.indexOf(searchValue) !== -1) {
-				searchResult = true;
+		} else if (typeof search_index === "string") {
+			search_index = search_index.toLowerCase();
+			if (search_index.indexOf(searchValue) !== -1) {
+				search_outcome = true;
 			}
 		}
 	}
-	if (searchResult) {
+	if (search_outcome) {
 		return object;
 	} else {
 		return false;
 	}
 };
 
+// function to clear the existing user markup and generate new user markup based on the search results
 const filter_html = () => {
 	let current_html = document.querySelectorAll(".user");
 	current_html.forEach((html) => html.remove());
-	generateHTML(search_data);
+	generateHTML(search_results);
 };
+
+/* ===================== Event Listeners =========================
+============================================================= */
+
+// search input - fires on input field keyup
+search.addEventListener("keyup", (event) => {
+	searchValue = search.value;
+	searchArray();
+	filter_html();
+});
